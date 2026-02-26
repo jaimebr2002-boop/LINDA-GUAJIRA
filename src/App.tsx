@@ -1,6 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapPin, Phone, Clock, Star, Calendar, ChevronLeft, ChevronRight, X, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+
+const menuImages = [
+  "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140996/554560870_17942291643059732_8968172631413223745_n._shlycr.jpg",
+  "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140996/554239036_17942290755059732_7329399533664210249_n._g0v9ew.jpg",
+  "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140985/575721314_17946873144059732_4456658020255486266_n._jfxgub.jpg",
+  "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772138826/571972724_17945749734059732_5439757119791302189_n._isabnb.jpg"
+];
+
+const reviews = [
+  [
+    { name: "Ricardo", text: "Hermoso restaurante temático Cubano en Barrio Salamanca, metro Manuel Becerra. Es completamente nuevo y bellamente decorado. La comida muy rica. Al medio día tiene menú a muy buen precio. Los jueves, viernes y sábado tienen música en vivo…" },
+    { name: "Lybe K", text: "Fuimos a tomar algo y a bailar. Entrada de 15€ incluida consumición. Lugar super bonito. Música en vivo muy buena. Ambiente espectacular, bailes hasta cierre del local. Nos ha encantado." },
+    { name: "Dottore 1964", text: "Maravilloso restaurante bar de cocina típica cubana. Amplio salón, decorado como la plaza del Capitolio de La Habana. Música en vivo, servicio rápido y atención excelente. Precio razonable." }
+  ],
+  [
+    { name: "Miguel Ángel Gutiérrez", text: "Auténtico sabor cubano en pleno centro de Madrid. Platos llenos de sazón, raciones generosas y cócteles excelentes. Música los fines de semana y ambiente que te hace sentir en La Habana. Ideal para ir con amigos y disfrutar sin prisas." },
+    { name: "Karina Blanco", text: "La comida está increíblemente buena. Cada plato tiene un sabor auténtico cubano, casero, como en ningún lugar. Se nota la calidad de los ingredientes y el cuidado en cada detalle. Todo estaba delicioso." },
+    { name: "Marcos M.R.", text: "Magnífico lugar para comer o cenar comida típica cubana. Amplio salón decorado como la Plaza del Capitolio. Música en vivo y atención excelente. Precio razonable, sin duda para repetir." }
+  ],
+  [
+    { name: "Yanulka Ofarrill", text: "Sitio precioso, han cuidado todos los detalles a la perfección. Se come de lujo y además hay música en vivo. Soy cubana y he ido varias veces, la experiencia es maravillosa." },
+    { name: "Ana", text: "Han abierto cerca de mi trabajo este lugar maravilloso. La decoración es alegre y espectacular. Fuimos a tomar cócteles y son un 10/10. Tenemos pendiente volver para probar más platos." },
+    { name: "Irene HF", text: "Cuando entras parece que estás en La Habana. Te atienden excelente y cuando pruebas la comida te transportas completamente. Música en vivo que hace la experiencia aún más especial." }
+  ],
+  [
+    { name: "Maria Eugenia", text: "Restaurante precioso, con esencia cubana auténtica y trato estupendo. Todo está puesto con mucho gusto y transmite muy buena vibra." },
+    { name: "Olga Lidia Moreno", text: "Se hizo el día especial solo de entrar y escuchar música en vivo. Comida excelente y platos variados. Experiencia que recuerda totalmente a Cuba." },
+    { name: "Katia Marquez", text: "Lugar muy agradable con servicio maravilloso. La comida impresionante, auténtica comida cubana bien elaborada y con sabor que recuerda a mi tierra." }
+  ],
+  [
+    { name: "José Benavides", text: "Llegamos por recomendación y confirmamos que es uno de los mejores sitios en Madrid para disfrutar de auténtica cocina cubana. Experiencia espectacular y totalmente recomendable." },
+    { name: "Aintzane Tejada", text: "Fuimos a comer y el ambiente era tranquilo. La comida buenísima, raciones grandes y calidad precio excelente. Repetiremos sin duda." },
+    { name: "Majela Dueñas", text: "Un lugar maravilloso con buena vibra, comida de 10 y personal super atento. El mejor rincón cubano en Madrid." }
+  ]
+];
 
 export default function App() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -9,46 +44,18 @@ export default function App() {
   const [selectedMenuImage, setSelectedMenuImage] = useState<string | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const menuImages = [
-    "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140996/554560870_17942291643059732_8968172631413223745_n._shlycr.jpg",
-    "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140996/554239036_17942290755059732_7329399533664210249_n._g0v9ew.jpg",
-    "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772140985/575721314_17946873144059732_4456658020255486266_n._jfxgub.jpg",
-    "https://res.cloudinary.com/dfbsqy5ul/image/upload/v1772138826/571972724_17945749734059732_5439757119791302189_n._isabnb.jpg"
-  ];
-
-  const reviews = [
-    [
-      { name: "Ricardo", text: "Hermoso restaurante temático Cubano en Barrio Salamanca, metro Manuel Becerra. Es completamente nuevo y bellamente decorado. La comida muy rica. Al medio día tiene menú a muy buen precio. Los jueves, viernes y sábado tienen música en vivo…" },
-      { name: "Lybe K", text: "Fuimos a tomar algo y a bailar. Entrada de 15€ incluida consumición. Lugar super bonito. Música en vivo muy buena. Ambiente espectacular, bailes hasta cierre del local. Nos ha encantado." },
-      { name: "Dottore 1964", text: "Maravilloso restaurante bar de cocina típica cubana. Amplio salón, decorado como la plaza del Capitolio de La Habana. Música en vivo, servicio rápido y atención excelente. Precio razonable." }
-    ],
-    [
-      { name: "Miguel Ángel Gutiérrez", text: "Auténtico sabor cubano en pleno centro de Madrid. Platos llenos de sazón, raciones generosas y cócteles excelentes. Música los fines de semana y ambiente que te hace sentir en La Habana. Ideal para ir con amigos y disfrutar sin prisas." },
-      { name: "Karina Blanco", text: "La comida está increíblemente buena. Cada plato tiene un sabor auténtico cubano, casero, como en ningún lugar. Se nota la calidad de los ingredientes y el cuidado en cada detalle. Todo estaba delicioso." },
-      { name: "Marcos M.R.", text: "Magnífico lugar para comer o cenar comida típica cubana. Amplio salón decorado como la Plaza del Capitolio. Música en vivo y atención excelente. Precio razonable, sin duda para repetir." }
-    ],
-    [
-      { name: "Yanulka Ofarrill", text: "Sitio precioso, han cuidado todos los detalles a la perfección. Se come de lujo y además hay música en vivo. Soy cubana y he ido varias veces, la experiencia es maravillosa." },
-      { name: "Ana", text: "Han abierto cerca de mi trabajo este lugar maravilloso. La decoración es alegre y espectacular. Fuimos a tomar cócteles y son un 10/10. Tenemos pendiente volver para probar más platos." },
-      { name: "Irene HF", text: "Cuando entras parece que estás en La Habana. Te atienden excelente y cuando pruebas la comida te transportas completamente. Música en vivo que hace la experiencia aún más especial." }
-    ],
-    [
-      { name: "Maria Eugenia", text: "Restaurante precioso, con esencia cubana auténtica y trato estupendo. Todo está puesto con mucho gusto y transmite muy buena vibra." },
-      { name: "Olga Lidia Moreno", text: "Se hizo el día especial solo de entrar y escuchar música en vivo. Comida excelente y platos variados. Experiencia que recuerda totalmente a Cuba." },
-      { name: "Katia Marquez", text: "Lugar muy agradable con servicio maravilloso. La comida impresionante, auténtica comida cubana bien elaborada y con sabor que recuerda a mi tierra." }
-    ],
-    [
-      { name: "José Benavides", text: "Llegamos por recomendación y confirmamos que es uno de los mejores sitios en Madrid para disfrutar de auténtica cocina cubana. Experiencia espectacular y totalmente recomendable." },
-      { name: "Aintzane Tejada", text: "Fuimos a comer y el ambiente era tranquilo. La comida buenísima, raciones grandes y calidad precio excelente. Repetiremos sin duda." },
-      { name: "Majela Dueñas", text: "Un lugar maravilloso con buena vibra, comida de 10 y personal super atento. El mejor rincón cubano en Madrid." }
-    ]
-  ];
-
   const nextImage = () => setCurrentImageIndex((prev) => (prev + 1) % menuImages.length);
   const prevImage = () => setCurrentImageIndex((prev) => (prev - 1 + menuImages.length) % menuImages.length);
 
   const nextReviewSlide = () => setCurrentReviewSlide((prev) => (prev + 1) % reviews.length);
   const prevReviewSlide = () => setCurrentReviewSlide((prev) => (prev - 1 + reviews.length) % reviews.length);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentReviewSlide((prev) => (prev + 1) % reviews.length);
+    }, 10000);
+    return () => clearInterval(interval);
+  }, [currentReviewSlide]);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white font-sans">
