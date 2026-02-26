@@ -51,7 +51,7 @@ export default function App() {
   const prevReviewSlide = () => setCurrentReviewSlide((prev) => (prev - 1 + reviews.length) % reviews.length);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-[#0a0a0a] text-white font-sans">
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col">
         {/* Background Image with Overlay */}
